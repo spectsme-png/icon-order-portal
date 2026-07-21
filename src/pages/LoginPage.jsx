@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
+import { supabaseConfigError } from '../lib/supabase'
 
 export default function LoginPage() {
   const { signIn, session, role, loading } = useAuth()
@@ -42,6 +43,7 @@ export default function LoginPage() {
         <div className="brand">ICON</div>
         <h1>Order Portal</h1>
         <p className="muted">Sign in as Optician or Aynai (office).</p>
+        {supabaseConfigError ? <div className="alert">{supabaseConfigError}</div> : null}
         {session && !role ? (
           <div className="alert">Signed in, but no role found. Check profiles in Supabase.</div>
         ) : null}
