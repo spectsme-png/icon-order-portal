@@ -1,0 +1,943 @@
+:root {
+  --bg: #eef2f7;
+  --panel: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --accent: #0f766e;
+  --accent-2: #0d9488;
+  --border: #cbd5e1;
+  --danger: #b91c1c;
+  --ok: #047857;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; background: var(--bg); }
+a { color: var(--accent); text-decoration: none; }
+button, input, select { font: inherit; }
+
+.app-shell, .auth-shell, .print-shell { min-height: 100vh; }
+.auth-shell {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: linear-gradient(160deg, #0b1220, #134e4a 55%, #eef2f7 55%);
+}
+.auth-card { width: min(420px, 100%); }
+.brand { color: var(--accent); font-weight: 700; letter-spacing: 0.04em; }
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: #0b1220;
+  color: #fff;
+}
+.topbar .muted { color: #94a3b8; }
+.page { padding: 18px; max-width: 1100px; margin: 0 auto; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.card h1, .card h2 { margin: 0 0 12px; }
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+label { display: grid; gap: 6px; font-size: 0.92rem; color: #334155; }
+input, select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 10px;
+  background: #fff;
+}
+.btn {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn.primary { background: var(--accent); color: #fff; }
+.btn.primary:hover { background: var(--accent-2); }
+.btn.ghost { background: #e2e8f0; color: var(--text); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-disabled {
+  opacity: 0.55;
+  pointer-events: auto;
+  cursor: not-allowed;
+}
+.actions { display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 40px; }
+
+/* Optician single-screen compact layout */
+.optician-shell {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.topbar-slim {
+  padding: 8px 14px;
+  flex-shrink: 0;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.optician-workspace {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 10px;
+  padding: 8px 10px 10px;
+  max-width: 1480px;
+  width: 100%;
+  margin: 0 auto;
+}
+.optician-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.optician-fieldset:disabled {
+  opacity: 0.92;
+}
+.section-head {
+  margin-bottom: 6px;
+}
+.section-head h2 {
+  margin: 0;
+}
+.btn-sent {
+  background: #047857;
+  color: #fff;
+  cursor: default;
+}
+.btn-sent:disabled {
+  opacity: 1;
+}
+.send-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 8px 0 0;
+  flex-shrink: 0;
+}
+.remarks-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 6px;
+}
+.orders-panel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  overflow: hidden;
+}
+.orders-panel-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.orders-panel-head h2 {
+  margin: 0;
+}
+.date-filter {
+  margin: 0;
+  font-size: 0.72rem;
+  gap: 2px;
+  width: auto;
+  min-width: 132px;
+}
+.date-filter input {
+  padding: 4px 6px;
+  font-size: 0.8rem;
+}
+.orders-hint {
+  margin: 0 0 6px;
+}
+.orders-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 2px;
+}
+.order-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px;
+  text-align: left;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 7px 8px;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.order-row:hover {
+  border-color: var(--accent);
+  background: #f0fdfa;
+}
+.order-row-ref {
+  font-weight: 600;
+  font-size: 0.78rem;
+}
+.order-row-name {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.order-row-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.status-pill {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #334155;
+}
+.status-NEW { background: #ecfdf5; color: #047857; }
+.status-RECEIVED { background: #d1fae5; color: #065f46; }
+.status-PRINTED { background: #fff7ed; color: #c2410c; }
+.status-DONE { background: #d1fae5; color: #065f46; }
+.status-CANCELLED { background: #fef2f2; color: #b91c1c; }
+.btn-danger {
+  background: #b91c1c;
+  color: #fff;
+}
+.btn-danger:hover { background: #991b1b; }
+.orders-end {
+  text-align: center;
+  padding: 6px 0;
+}
+.order-readonly {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.order-readonly-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+.order-readonly-bar strong {
+  font-size: 0.82rem;
+  word-break: break-all;
+}
+.order-readonly-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+.ro-grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 8px;
+}
+.ro-grid > div {
+  min-width: 0;
+}
+.ro-grid .ro-full {
+  grid-column: 1 / -1;
+}
+.ro-grid dt {
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.ro-grid dd {
+  margin: 1px 0 0;
+  font-size: 0.8rem;
+  word-break: break-word;
+}
+.optician-grid {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  gap: 6px;
+  min-height: 0;
+}
+.card-slim {
+  padding: 6px 8px;
+  margin: 0;
+  border-radius: 8px;
+}
+.card-slim h2 {
+  margin: 0 0 4px;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+.hint {
+  margin: 0 0 6px;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px 8px;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px 8px;
+}
+.grid-finish {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.45fr);
+  gap: 6px 8px;
+  align-items: end;
+}
+.tint-inline {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+.tint-inline select {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.tint-color {
+  flex: 0 0 72px;
+  width: 72px;
+  max-width: 72px;
+  padding: 5px 6px !important;
+}
+.tint-pct {
+  flex: 0 0 44px;
+  width: 44px;
+  max-width: 44px;
+  padding: 5px 4px !important;
+  text-align: center;
+}
+.field-spacer {
+  min-height: 1px;
+}
+.optician-page label {
+  gap: 2px;
+  font-size: 0.75rem;
+}
+.optician-page input,
+.optician-page select {
+  padding: 5px 7px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+.btn-slim {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+.specials-slim {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.checks-slim {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  align-items: center;
+}
+.checks-slim .check {
+  font-size: 0.7rem;
+  gap: 3px;
+  white-space: nowrap;
+  margin: 0;
+}
+.rx-table-slim th,
+.rx-table-slim td {
+  padding: 2px;
+}
+.rx-table-slim td.rx-bad {
+  background: #ef4444;
+}
+.rx-table-slim td.rx-bad input {
+  background: #ef4444;
+  color: #fff;
+  border-color: #991b1b;
+}
+.rx-table-slim td.rx-bad input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+.rx-table-slim input,
+.rx-table-slim select {
+  min-width: 52px;
+  padding: 4px 5px;
+  font-size: 0.8rem;
+}
+.actions-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.alert-inline,
+.ok-inline {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+.alert-inline {
+  background: #fef2f2;
+  color: var(--danger);
+}
+.ok-inline {
+  background: #ecfdf5;
+  color: var(--ok);
+}
+
+@media (max-width: 1100px) {
+  .optician-workspace {
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+  .orders-panel {
+    min-height: 360px;
+    max-height: 50vh;
+  }
+  .optician-shell { height: auto; overflow: auto; }
+  .optician-page { overflow: auto; }
+  .grid-finish { grid-template-columns: 1fr; }
+}
+@media (max-width: 1000px) {
+  .grid-3,
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.alert {
+  background: #fef2f2;
+  color: var(--danger);
+  border: 1px solid #fecaca;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+.ok {
+  background: #ecfdf5;
+  color: var(--ok);
+  border: 1px solid #a7f3d0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+.checks { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 6px; margin-top: 8px; }
+.check { display: flex; align-items: center; gap: 8px; }
+.table-wrap { overflow-x: auto; margin-bottom: 12px; }
+.rx-table { width: 100%; border-collapse: collapse; }
+.rx-table th, .rx-table td { padding: 4px; text-align: left; }
+.rx-table input, .rx-table select { min-width: 64px; padding: 6px; }
+.eye-label { font-weight: 700; white-space: nowrap; }
+.row-between { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
+.filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 999px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+.chip.active { background: #ccfbf1; border-color: #5eead4; color: #115e59; }
+.order-list { display: grid; gap: 10px; margin-top: 12px; }
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+}
+.order-ref { font-family: Consolas, monospace; font-weight: 700; }
+.order-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+.status-NEW { background: #ffedd5; color: #9a3412; }
+.status-RECEIVED { background: #d1fae5; color: #065f46; }
+.status-PRINTED { background: #ede9fe; color: #5b21b6; }
+.status-DONE { background: #d1fae5; color: #065f46; }
+.status-CANCELLED { background: #fee2e2; color: #991b1b; }
+.remarks { margin-top: 6px; color: #9a3412; font-size: 0.9rem; }
+.office-shell {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.office-workspace {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 10px;
+  padding: 8px 10px 10px;
+  max-width: 1480px;
+  width: 100%;
+  margin: 0 auto;
+}
+.office-list-panel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  overflow: hidden;
+}
+.office-detail-panel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  overflow: hidden;
+}
+.office-empty {
+  padding: 24px 12px;
+}
+.office-detail-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+.office-detail-bar h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+.office-detail-actions {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.invoice-field {
+  margin: 0;
+  font-size: 0.72rem;
+  gap: 2px;
+  width: auto;
+  min-width: 120px;
+}
+.invoice-field input {
+  padding: 5px 7px;
+  font-size: 0.85rem;
+  width: 140px;
+}
+.office-detail-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding-right: 4px;
+}
+.office-meta {
+  margin-bottom: 10px;
+}
+.preview-heading {
+  margin: 12px 0 6px;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+.preview-scale {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  background: #f1f5f9;
+  border-radius: 8px;
+  overflow: auto;
+}
+.label-preview-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding: 8px;
+  background: #f1f5f9;
+  border-radius: 8px;
+}
+@media (max-width: 1100px) {
+  .office-workspace {
+    grid-template-columns: 1fr;
+    overflow: auto;
+  }
+  .office-shell { height: auto; overflow: auto; }
+  .office-list-panel { max-height: 40vh; }
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Stickers / Zebra 76×76 */
+.sticker-sheet {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+.sticker,
+.zebra-label {
+  width: 76mm;
+  height: 76mm;
+  border: 1px solid #111;
+  padding: 2mm;
+  font-size: 8pt;
+  line-height: 1.15;
+  background: #fff;
+  color: #111;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.sticker-title { font-weight: 800; }
+.sticker-id { font-family: Consolas, monospace; font-weight: 700; margin: 2px 0 4px; }
+.sticker-rx {
+  border: 1px solid #111;
+  margin: 4px 0;
+  padding: 3px;
+  font-family: Consolas, monospace;
+  font-weight: 700;
+}
+.sticker-spec { color: #b00000; font-weight: 700; }
+
+/* Clex-style Zebra label */
+.clex-label {
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 1.8mm;
+}
+.cl-top {
+  display: grid;
+  grid-template-columns: 11mm 1fr;
+  gap: 1.5mm;
+  border-bottom: 1px solid #111;
+  padding-bottom: 1mm;
+  margin-bottom: 1mm;
+}
+.cl-side {
+  border: 2px solid #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18pt;
+  font-weight: 800;
+  line-height: 1;
+}
+.cl-lens {
+  font-weight: 800;
+  font-size: 9.5pt;
+  margin-bottom: 0.6mm;
+}
+.cl-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 2mm;
+}
+.cl-meta-left {
+  font-size: 7.5pt;
+  font-weight: 600;
+}
+.cl-k {
+  display: inline-block;
+  min-width: 14mm;
+  font-weight: 700;
+}
+.cl-dia {
+  font-weight: 800;
+  font-size: 11pt;
+  white-space: nowrap;
+}
+.cl-rx {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 6.5pt;
+  margin-bottom: 1mm;
+}
+.cl-rx th,
+.cl-rx td {
+  border: 1px solid #111;
+  padding: 0.6mm 0.4mm;
+  text-align: center;
+}
+.cl-rx th {
+  font-weight: 700;
+  font-size: 5.8pt;
+}
+.cl-rx td {
+  font-family: Consolas, monospace;
+  font-weight: 700;
+  font-size: 8pt;
+}
+.cl-info {
+  font-size: 7pt;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 1mm;
+}
+.cl-info .cl-k {
+  min-width: 22mm;
+  font-weight: 700;
+}
+.cl-foot {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2mm;
+  align-items: end;
+}
+.cl-bar-wrap {
+  min-width: 0;
+  overflow: hidden;
+}
+.label-barcode {
+  max-width: 100%;
+  height: auto;
+}
+.cl-lot {
+  text-align: right;
+  font-size: 6pt;
+  line-height: 1.2;
+}
+.cl-lot-lbl {
+  font-weight: 800;
+  font-size: 7pt;
+}
+.cl-lot-val {
+  white-space: nowrap;
+}
+
+/* Zenius CR-80 card (matches sample envelope layout) */
+.warranty-print-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+.warranty-card,
+.zenius-card {
+  width: 85.6mm;
+  height: 53.98mm;
+  margin: 0;
+  border: 1px solid #111;
+  padding: 2.2mm 2.6mm;
+  background: #fff;
+  color: #111;
+  font-size: 6.2pt;
+  line-height: 1.2;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.wc-fields {
+  margin-bottom: 1mm;
+  display: grid;
+  gap: 0.45mm;
+}
+.wc-line {
+  display: grid;
+  grid-template-columns: 14mm 1fr;
+  column-gap: 1.2mm;
+  align-items: end;
+  min-height: 2.4mm;
+}
+.wc-ref-row {
+  display: grid;
+  grid-template-columns: 14mm 1fr 12mm 1fr;
+  column-gap: 1.2mm;
+  align-items: end;
+  min-height: 2.4mm;
+  width: 100%;
+}
+.wc-ref-row .wc-v {
+  width: 100%;
+}
+.wc-line.wc-lens {
+  margin-top: 0.2mm;
+}
+.wc-k {
+  color: #222;
+  font-weight: 700;
+  font-size: 5.8pt;
+  line-height: 1;
+  white-space: nowrap;
+  padding-bottom: 0.35mm;
+}
+.wc-v {
+  border-bottom: 0.35mm solid #222;
+  min-height: 2.2mm;
+  padding: 0 0.4mm 0.25mm;
+  font-weight: 700;
+  font-size: 6.2pt;
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wc-v.mono {
+  font-family: Consolas, "Courier New", monospace;
+  letter-spacing: -0.02em;
+}
+.wc-rx {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Consolas, monospace;
+  font-size: 6pt;
+  margin-bottom: 1mm;
+}
+.wc-rx th,
+.wc-rx td {
+  border: 1px solid #444;
+  padding: 0.55mm 0.8mm;
+  text-align: center;
+}
+.wc-rx th {
+  background: #f3f4f6;
+  font-weight: 700;
+}
+.wc-opt-title {
+  font-weight: 800;
+  font-size: 6.5pt;
+  margin: 0.4mm 0 0.6mm;
+}
+.wc-foot {
+  margin-top: auto;
+  font-size: 4.6pt;
+  color: #333;
+  line-height: 1.25;
+}
+.wc-foot p { margin: 0 0 0.6mm; }
+.wc-foot-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 2mm;
+}
+
+@media (max-width: 800px) {
+  .grid-2 { grid-template-columns: 1fr; }
+}
+
+@media print {
+  body { background: #fff; }
+  .no-print { display: none !important; }
+  .print-shell { min-height: auto; margin: 0; padding: 0; }
+
+  .sticker-sheet,
+  .sticker-sheet-exact {
+    padding: 0 !important;
+    gap: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  .label-page {
+    width: 76mm;
+    height: 76mm;
+    margin: 0;
+    padding: 0;
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden;
+  }
+  .label-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .sticker,
+  .zebra-label,
+  .clex-label {
+    width: 76mm !important;
+    height: 76mm !important;
+    max-width: 76mm;
+    max-height: 76mm;
+    margin: 0 !important;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+
+  .warranty-print-wrap,
+  .warranty-print-exact {
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  .card-page {
+    width: 85.6mm;
+    height: 53.98mm;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .warranty-card,
+  .zenius-card {
+    width: 85.6mm !important;
+    height: 53.98mm !important;
+    margin: 0 !important;
+    box-shadow: none;
+    page-break-after: avoid;
+  }
+
+  @page {
+    margin: 0;
+  }
+}

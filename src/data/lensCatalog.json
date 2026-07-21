@@ -1,0 +1,423 @@
+{
+  "matrix": {
+    "Progressive": {
+      "Icon Plus": {
+        "Clear": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.6",
+          "1.74"
+        ],
+        "Clear Bluecut": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Bluecut Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Transitions Gen S Grey": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Polarized Grey": [
+          "1.5"
+        ],
+        "Polarized Brown": [
+          "1.5"
+        ]
+      },
+      "Icon Max": {
+        "Clear": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Clear Bluecut": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Bluecut Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Transitions Gen S Grey": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Polarized Grey": [
+          "1.5"
+        ],
+        "Polarized Brown": [
+          "1.5"
+        ]
+      },
+      "Icon Pro": {
+        "Clear": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Clear Bluecut": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Bluecut Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Transitions Gen S Grey": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Polarized Grey": [
+          "1.5"
+        ],
+        "Polarized Brown": [
+          "1.5"
+        ]
+      },
+      "Icon Panorama": {
+        "Clear": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.6",
+          "1.7"
+        ],
+        "Clear Bluecut": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Bluecut Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Transitions Gen S Grey": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Polarized Grey": [
+          "1.5"
+        ],
+        "Polarized Brown": [
+          "1.5"
+        ]
+      }
+    },
+    "Single Vision": {
+      "Icon HD": {
+        "Clear": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Clear Bluecut": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Bluecut Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Transitions Gen S Grey": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Polarized Grey": [
+          "1.5"
+        ],
+        "Polarized Brown": [
+          "1.5"
+        ]
+      },
+      "Icon Relax": {
+        "Clear": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Clear Bluecut": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Bluecut Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Transitions Gen S Grey": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Polarized Grey": [
+          "1.5"
+        ],
+        "Polarized Brown": [
+          "1.5"
+        ]
+      },
+      "Icon Ultra HD": {
+        "Clear": [
+          "1.61",
+          "1.67",
+          "1.74"
+        ]
+      },
+      "Icon Myocare": {
+        "Bluecut Clear": [
+          "1.6"
+        ]
+      }
+    },
+    "Occupational": {
+      "Icon Office": {
+        "Clear": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Clear Bluecut": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ]
+      },
+      "Icon Eazy": {
+        "Clear": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Clear Bluecut": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Bluecut Photochromic": [
+          "1.5",
+          "1.59",
+          "1.61",
+          "1.67"
+        ],
+        "Transitions Gen S Grey": [
+          "1.5",
+          "1.53",
+          "1.59",
+          "1.61",
+          "1.67",
+          "1.74"
+        ],
+        "Polarized Grey": [
+          "1.5"
+        ],
+        "Polarized Brown": [
+          "1.5"
+        ]
+      }
+    },
+    "Bifocal": {
+      "Icon Invisible Line": {
+        "Clear": [
+          "1.5",
+          "1.61",
+          "1.67"
+        ],
+        "Clear Bluecut": [
+          "1.5",
+          "1.61",
+          "1.67"
+        ],
+        "Photochromic": [
+          "1.5"
+        ]
+      },
+      "Icon Bifocal D-28": {
+        "Clear": [
+          "1.5"
+        ]
+      },
+      "Icon Bifocal D-29": {
+        "Clear": [
+          "1.61"
+        ]
+      },
+      "Icon Bifocal D-30": {
+        "Clear": [
+          "1.56"
+        ]
+      },
+      "Icon Bifocal D-31": {
+        "Clear Bluecut": [
+          "1.5"
+        ]
+      },
+      "Icon Bifocal D-32": {
+        "Photochromic": [
+          "1.5"
+        ]
+      },
+      "Icon Bifocal D-33": {
+        "Photochromic Bluecut": [
+          "1.5"
+        ]
+      }
+    }
+  },
+  "coating": [
+    "None",
+    "Emerald Green Coating",
+    "Mirror (Gold,Silver,Blue)",
+    "Sapphire Blue Coating",
+    "Solitare Low Reflection"
+  ],
+  "edging": [
+    "None",
+    "Edging Fit - Out",
+    "Edging Full Frame",
+    "Edging Half Frame",
+    "Edging Rimless",
+    "Step Bevel Edging"
+  ],
+  "tinting": [
+    "None",
+    "Full",
+    "Gradient"
+  ],
+  "special": [
+    "Custom Engraving",
+    "Decentration (1mm to 5mm)",
+    "Edge Blending",
+    "High Cyl (-4.25 to -6.00)",
+    "High Cyl (-6.25 to -8.00)",
+    "Prism Diopter (1 to 5)",
+    "Special Base",
+    "Special Dia",
+    "Special Thickness"
+  ],
+  "sizes": [
+    "50",
+    "55",
+    "60",
+    "65",
+    "70"
+  ]
+}
