@@ -20,12 +20,22 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     let mounted = true
-    supabase.auth.getSession().then(({ data }) => {
-      if (!mounted) return
-      setSession(data.session)
-      if (data.session?.user) loadProfile(data.session.user.id).finally(() => setLoading(false))
-      else setLoading(false)
-    })
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        if (!mounted) return
+        setSession(data.session)
+        if (data.session?.user) {
+          return loadProfile(data.session.user.id).finally(() => {
+            if (mounted) setLoading(false)
+          })
+        }
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.error(err)
+        if (mounted) setLoading(false)
+      })
     const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
       setSession(next)
       if (next?.user) loadProfile(next.user.id)
