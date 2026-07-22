@@ -98,6 +98,18 @@ input, select {
   align-items: center;
   gap: 10px;
 }
+.lang-switch {
+  display: inline-flex;
+  gap: 4px;
+  margin-inline-end: 4px;
+}
+.lang-switch .btn {
+  min-width: 2.4rem;
+  padding-inline: 8px;
+}
+.optician-shell[dir='rtl'] {
+  font-family: "Segoe UI", Tahoma, "Noto Naskh Arabic", "Arial", sans-serif;
+}
 .optician-workspace {
   flex: 1;
   min-height: 0;

@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import catalog from '../data/lensCatalog.json'
+import { getSavedLang, saveLang, t as tt } from '../lib/opticianI18n'
 import { displayOrderStatus, remarksWithoutCancelMark } from '../lib/orderStatus'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
 
 const PAGE_SIZE = 50
-const CORRIDOR_OPTIONS = ['Short', 'Medium', 'Large']
+const CORRIDOR_VALUES = ['Short', 'Medium', 'Large']
 
 const emptyEye = () => ({
   size: '70',
@@ -21,12 +22,12 @@ const emptyEye = () => ({
 })
 
 const RX_LIMITS = {
-  sph: { min: -30, max: 22, step: 0.25, label: 'SPH (−30…+22, 0.25 steps)' },
-  cyl: { min: -12, max: 12, step: 0.25, label: 'CYL (−12…+12, 0.25 steps)' },
-  axis: { min: 0, max: 180, step: 1, integer: true, label: 'AXIS (0…180, 1° steps)' },
-  add: { min: 0.25, max: 4, step: 0.25, positiveOnly: true, label: 'ADD (+0.25…+4.00, 0.25 steps)' },
-  ipd: { min: 25, max: 38, step: 1, integer: true, label: 'IPD mono (25…38)' },
-  prism: { min: 0, max: 12, step: 1, integer: true, label: 'PRISM (0…12, 1 steps)' },
+  sph: { min: -30, max: 22, step: 0.25, labelKey: 'rxSph' },
+  cyl: { min: -12, max: 12, step: 0.25, labelKey: 'rxCyl' },
+  axis: { min: 0, max: 180, step: 1, integer: true, labelKey: 'rxAxis' },
+  add: { min: 0.25, max: 4, step: 0.25, positiveOnly: true, labelKey: 'rxAdd' },
+  ipd: { min: 25, max: 38, step: 1, integer: true, labelKey: 'rxIpd' },
+  prism: { min: 0, max: 12, step: 1, integer: true, labelKey: 'rxPrism' },
 }
 
 function isIncompleteNumber(raw) {
@@ -69,12 +70,12 @@ function isRxFieldInvalid(field, raw) {
   return false
 }
 
-function eyeRxErrors(eye) {
+function eyeRxErrors(eye, labels) {
   const bad = []
   for (const field of Object.keys(RX_LIMITS)) {
-    if (isRxFieldInvalid(field, eye[field])) bad.push(RX_LIMITS[field].label)
+    if (isRxFieldInvalid(field, eye[field])) bad.push(labels[RX_LIMITS[field].labelKey])
   }
-  if (isRxFieldInvalid('fh', eye.fh)) bad.push('FH (number)')
+  if (isRxFieldInvalid('fh', eye.fh)) bad.push(labels.rxFh)
   return bad
 }
 
@@ -134,6 +135,8 @@ export default function OpticianPage() {
   const listRef = useRef(null)
   const ordersRef = useRef([])
   const loadingMoreRef = useRef(false)
+  const [lang, setLang] = useState(getSavedLang)
+  const t = tt(lang)
   const [orderRef, setOrderRef] = useState(makeRef)
   const [customer, setCustomer] = useState('')
   const [branch, setBranch] = useState(profile?.branch_name || 'Main Branch')
@@ -148,6 +151,24 @@ export default function OpticianPage() {
   const [tintPct, setTintPct] = useState('')
   const [specials, setSpecials] = useState({})
   const [remarks, setRemarks] = useState('')
+
+  function switchLang(next) {
+    setLang(next)
+    saveLang(next)
+  }
+
+  const corridorOptions = useMemo(() => {
+    const labels = tt(lang)
+    return CORRIDOR_VALUES.map((value) => ({
+      value,
+      label:
+        value === 'Short'
+          ? labels.corridorShort
+          : value === 'Medium'
+            ? labels.corridorMedium
+            : labels.corridorLarge,
+    }))
+  }, [lang])
   const [od, setOd] = useState(emptyEye)
   const [os, setOs] = useState(emptyEye)
   const [msg, setMsg] = useState('')
@@ -332,28 +353,28 @@ export default function OpticianPage() {
     setErr('')
     setMsg('')
     if (!customer.trim()) {
-      setErr('Customer name is required')
+      setErr(t.errCustomer)
       return
     }
     if (!orderRef.trim()) {
-      setErr('Order reference is required')
+      setErr(t.errRef)
       return
     }
     if (!lensType || !design || !func || !indexOption) {
-      setErr('Select Type, Design, Function, and Index (1–9 or click)')
+      setErr(t.errLens)
       return
     }
-    const odBad = eyeRxErrors(od)
-    const osBad = eyeRxErrors(os)
+    const odBad = eyeRxErrors(od, t)
+    const osBad = eyeRxErrors(os, t)
     if (odBad.length || osBad.length) {
       const parts = []
       if (odBad.length) parts.push(`OD: ${odBad.join(', ')}`)
       if (osBad.length) parts.push(`OS: ${osBad.join(', ')}`)
-      setErr(`Fix prescription values — ${parts.join(' · ')}`)
+      setErr(`${t.errRx} — ${parts.join(' · ')}`)
       return
     }
     if (isProgressive && (!od.corridor || !os.corridor)) {
-      setErr('Select corridor length for OD and OS (Short / Medium / Large)')
+      setErr(t.errCorridor)
       return
     }
     setBusy(true)
@@ -366,7 +387,7 @@ export default function OpticianPage() {
         .limit(1)
       if (checkErr) throw checkErr
       if (existing?.length) {
-        setErr(`Order reference ${ref} was already sent. Use New Order for a new ref.`)
+        setErr(t.errDup(ref))
         return
       }
 
@@ -407,13 +428,13 @@ export default function OpticianPage() {
       const { error } = await supabase.from('orders').insert(payload)
       if (error) {
         if (/duplicate|unique/i.test(error.message)) {
-          setErr(`Order reference ${ref} was already sent. Use New Order for a new ref.`)
+          setErr(t.errDup(ref))
           return
         }
         throw error
       }
       setSent(true)
-      setMsg(`Order ${ref} sent to Aynai.`)
+      setMsg(t.msgSent(ref))
       setFilterDate(todayLocal())
       await loadOrders({ reset: true })
     } catch (ex) {
@@ -492,9 +513,9 @@ export default function OpticianPage() {
               onKeyDown={onFieldKeyDown}
             >
               <option value="">—</option>
-              {numberedOptions(CORRIDOR_OPTIONS).map((o) => (
+              {corridorOptions.map((o, i) => (
                 <option key={o.value} value={o.value}>
-                  {o.label}
+                  {i + 1}. {o.label}
                 </option>
               ))}
             </select>
@@ -508,7 +529,7 @@ export default function OpticianPage() {
             value={eye.fh}
             onChange={(e) => setBothFh(e.target.value)}
             onKeyDown={onFieldKeyDown}
-            placeholder="opt"
+            placeholder={t.fhOpt}
           />
         </td>
       </tr>
@@ -516,17 +537,33 @@ export default function OpticianPage() {
   }
 
   return (
-    <div className="app-shell optician-shell">
+    <div className="app-shell optician-shell" lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <header className="topbar topbar-slim">
-        <strong>ICON Order Portal · Optician</strong>
+        <strong>{t.title}</strong>
         <div className="topbar-right">
+          <div className="lang-switch" role="group" aria-label="Language">
+            <button
+              type="button"
+              className={`btn btn-slim ${lang === 'en' ? 'primary' : 'ghost'}`}
+              onClick={() => switchLang('en')}
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              className={`btn btn-slim ${lang === 'ar' ? 'primary' : 'ghost'}`}
+              onClick={() => switchLang('ar')}
+            >
+              عربي
+            </button>
+          </div>
           <button className="btn primary btn-slim" type="button" onClick={startNewOrder}>
-            New Order
+            {t.newOrder}
           </button>
-          <span className="hint">Enter = next · 1–9 = pick dropdown</span>
+          <span className="hint">{t.navHint}</span>
           <span className="muted small">{profile?.email}</span>
           <button className="btn ghost btn-slim" type="button" onClick={signOut}>
-            Sign out
+            {t.signOut}
           </button>
         </div>
       </header>
@@ -537,12 +574,12 @@ export default function OpticianPage() {
           <div className="optician-grid">
             <section className="card card-slim">
               <div className="row-between section-head">
-                <h2>Customer</h2>
-                {sent ? <span className="ok-inline">Order sent — press New Order for next</span> : null}
+                <h2>{t.customerSection}</h2>
+                {sent ? <span className="ok-inline">{t.orderSentBanner}</span> : null}
               </div>
               <div className="grid-3">
                 <label>
-                  Order ref
+                  {t.orderRef}
                   <input
                     data-nav="1"
                     value={orderRef}
@@ -553,7 +590,7 @@ export default function OpticianPage() {
                   />
                 </label>
                 <label>
-                  Branch
+                  {t.branch}
                   <input
                     data-nav="1"
                     value={branch}
@@ -562,7 +599,7 @@ export default function OpticianPage() {
                   />
                 </label>
                 <label>
-                  Customer
+                  {t.customer}
                   <input
                     data-nav="1"
                     value={customer}
@@ -575,10 +612,10 @@ export default function OpticianPage() {
             </section>
 
             <section className="card card-slim">
-              <h2>Lens</h2>
+              <h2>{t.lens}</h2>
               <div className="grid-4">
                 <label>
-                  1. Type
+                  {t.type}
                   <select
                     data-nav="1"
                     value={lensType}
@@ -599,7 +636,7 @@ export default function OpticianPage() {
                   </select>
                 </label>
                 <label>
-                  2. Design
+                  {t.design}
                   <select
                     data-nav="1"
                     value={design}
@@ -620,7 +657,7 @@ export default function OpticianPage() {
                   </select>
                 </label>
                 <label>
-                  3. Function
+                  {t.function}
                   <select
                     data-nav="1"
                     value={func}
@@ -640,7 +677,7 @@ export default function OpticianPage() {
                   </select>
                 </label>
                 <label>
-                  4. Index
+                  {t.index}
                   <select
                     data-nav="1"
                     value={indexOption}
@@ -660,10 +697,10 @@ export default function OpticianPage() {
             </section>
 
             <section className="card card-slim">
-              <h2>Finishing</h2>
+              <h2>{t.finishing}</h2>
               <div className="grid-finish">
                 <label>
-                  5. Coating
+                  {t.coating}
                   <select
                     data-nav="1"
                     value={coating}
@@ -678,7 +715,7 @@ export default function OpticianPage() {
                   </select>
                 </label>
                 <label>
-                  6. Edging
+                  {t.edging}
                   <select
                     data-nav="1"
                     value={edging}
@@ -693,7 +730,7 @@ export default function OpticianPage() {
                   </select>
                 </label>
                 <label className="tint-field">
-                  7. Tinting
+                  {t.tinting}
                   <div className="tint-inline">
                     <select
                       data-nav="1"
@@ -721,8 +758,8 @@ export default function OpticianPage() {
                           value={tintColor}
                           onChange={(e) => setTintColor(e.target.value)}
                           onKeyDown={onFieldKeyDown}
-                          placeholder="Color"
-                          aria-label="Tint color"
+                          placeholder={t.tintColor}
+                          aria-label={t.tintColor}
                         />
                         <input
                           data-nav="1"
@@ -739,7 +776,7 @@ export default function OpticianPage() {
                 </label>
               </div>
               <div className="specials-slim">
-                <span className="muted small">Special</span>
+                <span className="muted small">{t.special}</span>
                 <div className="checks-slim">
                   {catalog.special.map((s) => (
                     <label key={s} className="check">
@@ -752,22 +789,22 @@ export default function OpticianPage() {
             </section>
 
             <section className="card card-slim">
-              <h2>Prescription</h2>
+              <h2>{t.prescription}</h2>
               <div className="table-wrap">
                 <table className="rx-table rx-table-slim">
                   <thead>
                     <tr>
-                      <th>Eye</th>
-                      <th>SIZE</th>
-                      <th>SPH</th>
-                      <th>CYL</th>
-                      <th>AXIS</th>
-                      <th>ADD</th>
-                      <th>IPD mono</th>
-                      <th>PRISM</th>
-                      <th>BASE</th>
-                      {isProgressive ? <th>CORR</th> : null}
-                      <th>FH</th>
+                      <th>{t.eye}</th>
+                      <th>{t.size}</th>
+                      <th>{t.sph}</th>
+                      <th>{t.cyl}</th>
+                      <th>{t.axis}</th>
+                      <th>{t.add}</th>
+                      <th>{t.ipd}</th>
+                      <th>{t.prism}</th>
+                      <th>{t.base}</th>
+                      {isProgressive ? <th>{t.corr}</th> : null}
+                      <th>{t.fh}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -778,14 +815,14 @@ export default function OpticianPage() {
               </div>
               <div className="remarks-row">
                 <label>
-                  Remarks
+                  {t.remarks}
                   <input
                     data-nav="1"
                     data-nav-end="1"
                     value={remarks}
                     onChange={(e) => setRemarks(e.target.value)}
                     onKeyDown={onFieldKeyDown}
-                    placeholder="Aynai only"
+                    placeholder={t.remarksPh}
                   />
                 </label>
               </div>
@@ -800,16 +837,16 @@ export default function OpticianPage() {
               type="submit"
               disabled={busy || sent}
             >
-              {busy ? 'Sending…' : sent ? 'Order sent' : 'Send to Aynai'}
+              {busy ? t.sending : sent ? t.orderSent : t.send}
             </button>
           </div>
         </form>
 
         <aside className="orders-panel card card-slim">
           <div className="orders-panel-head">
-            <h2>My orders</h2>
+            <h2>{t.myOrders}</h2>
             <label className="date-filter">
-              Date
+              {t.date}
               <input
                 type="date"
                 value={filterDate}
@@ -818,8 +855,8 @@ export default function OpticianPage() {
             </label>
           </div>
           <p className="hint orders-hint">
-            Showing {orders.length}
-            {hasMore ? '+' : ''} · click to view (read-only)
+            {t.showing} {orders.length}
+            {hasMore ? '+' : ''} {t.clickView}
           </p>
 
           {ordersErr ? <div className="alert-inline">{ordersErr}</div> : null}
@@ -829,53 +866,53 @@ export default function OpticianPage() {
               <div className="order-readonly-bar">
                 <strong>{selected.order_ref}</strong>
                 <button className="btn ghost btn-slim" type="button" onClick={() => setSelected(null)}>
-                  Back to list
+                  {t.backToList}
                 </button>
               </div>
               <div className="order-readonly-body">
                 <dl className="ro-grid">
                   <div>
-                    <dt>Status</dt>
+                    <dt>{t.status}</dt>
                     <dd>{displayOrderStatus(selected, 'optician')}</dd>
                   </div>
                   <div>
-                    <dt>Time</dt>
+                    <dt>{t.time}</dt>
                     <dd>{formatTime(selected.created_at)}</dd>
                   </div>
                   <div>
-                    <dt>Customer</dt>
+                    <dt>{t.customer}</dt>
                     <dd>{selected.customer_name}</dd>
                   </div>
                   <div>
-                    <dt>Branch</dt>
+                    <dt>{t.branch}</dt>
                     <dd>{selected.branch_name || '—'}</dd>
                   </div>
                   <div>
-                    <dt>Type</dt>
+                    <dt>{t.typeLabel}</dt>
                     <dd>{selected.lens_type || '—'}</dd>
                   </div>
                   <div>
-                    <dt>Design</dt>
+                    <dt>{t.designLabel}</dt>
                     <dd>{selected.design || '—'}</dd>
                   </div>
                   <div>
-                    <dt>Function</dt>
+                    <dt>{t.functionLabel}</dt>
                     <dd>{selected.func || '—'}</dd>
                   </div>
                   <div>
-                    <dt>Index</dt>
+                    <dt>{t.indexLabel}</dt>
                     <dd>{selected.index_option || '—'}</dd>
                   </div>
                   <div>
-                    <dt>Coating</dt>
+                    <dt>{t.coatingLabel}</dt>
                     <dd>{selected.coating || '—'}</dd>
                   </div>
                   <div>
-                    <dt>Edging</dt>
+                    <dt>{t.edgingLabel}</dt>
                     <dd>{selected.edging || '—'}</dd>
                   </div>
                   <div>
-                    <dt>Tinting</dt>
+                    <dt>{t.tintingLabel}</dt>
                     <dd>
                       {selected.tinting || '—'}
                       {selected.tint_color ? ` · ${selected.tint_color}` : ''}
@@ -883,7 +920,7 @@ export default function OpticianPage() {
                     </dd>
                   </div>
                   <div>
-                    <dt>Specials</dt>
+                    <dt>{t.specials}</dt>
                     <dd>{selected.specials || 'None'}</dd>
                   </div>
                   <div className="ro-full">
@@ -895,7 +932,7 @@ export default function OpticianPage() {
                     <dd>{eyeLine(selected.os)}</dd>
                   </div>
                   <div className="ro-full">
-                    <dt>Remarks</dt>
+                    <dt>{t.remarks}</dt>
                     <dd>{remarksWithoutCancelMark(selected.remarks) || '—'}</dd>
                   </div>
                 </dl>
@@ -903,9 +940,9 @@ export default function OpticianPage() {
             </div>
           ) : (
             <div className="orders-list" ref={listRef} onScroll={onListScroll}>
-              {ordersLoading ? <p className="muted small">Loading…</p> : null}
+              {ordersLoading ? <p className="muted small">{t.loading}</p> : null}
               {!ordersLoading && orders.length === 0 ? (
-                <p className="muted small">No orders on this day.</p>
+                <p className="muted small">{t.noOrders}</p>
               ) : null}
               {orders.map((o) => (
                 <button
@@ -924,11 +961,11 @@ export default function OpticianPage() {
                   </span>
                 </button>
               ))}
-              {ordersLoadingMore ? <p className="muted small">Loading more…</p> : null}
+              {ordersLoadingMore ? <p className="muted small">{t.loadingMore}</p> : null}
               {!ordersLoading && !hasMore && orders.length > 0 ? (
-                <p className="muted small orders-end">End of list</p>
+                <p className="muted small orders-end">{t.endOfList}</p>
               ) : null}
-              {hasMore ? <p className="muted small orders-end">Scroll for more</p> : null}
+              {hasMore ? <p className="muted small orders-end">{t.scrollMore}</p> : null}
             </div>
           )}
         </aside>
