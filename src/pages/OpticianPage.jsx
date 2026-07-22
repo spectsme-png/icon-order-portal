@@ -88,7 +88,7 @@ function makeRef() {
 }
 
 function numberedOptions(values) {
-  return values.map((v, i) => ({ value: v, label: `${i + 1}. ${v}` }))
+  return values.map((v) => ({ value: v, label: v }))
 }
 
 function todayLocal() {
@@ -331,7 +331,9 @@ export default function OpticianPage() {
           ? e.code.slice(6)
           : null
       if (digit && digit >= '1' && digit <= '9') {
-        const match = [...el.options].find((o) => o.textContent.trim().startsWith(`${digit}.`))
+        const n = Number(digit)
+        const valued = [...el.options].filter((o) => o.value !== '')
+        const match = valued[n - 1]
         if (match) {
           e.preventDefault()
           el.value = match.value
@@ -522,9 +524,9 @@ export default function OpticianPage() {
               onKeyDown={onFieldKeyDown}
             >
               <option value="">—</option>
-              {corridorOptions.map((o, i) => (
+              {corridorOptions.map((o) => (
                 <option key={o.value} value={o.value}>
-                  {i + 1}. {o.label}
+                  {o.label}
                 </option>
               ))}
             </select>
