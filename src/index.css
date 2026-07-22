@@ -114,12 +114,20 @@ input, select {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 10px;
-  padding: 8px 10px 10px;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 8px;
+  padding: 6px 8px 8px;
   max-width: 1480px;
   width: 100%;
   margin: 0 auto;
+  overflow: hidden;
+}
+.optician-page {
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 .optician-fieldset {
   border: 0;
@@ -154,14 +162,14 @@ input, select {
   justify-content: flex-end;
   gap: 8px;
   flex-wrap: wrap;
-  padding: 8px 0 0;
+  padding: 4px 0 0;
   flex-shrink: 0;
 }
 .remarks-row {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 6px;
-  margin-top: 6px;
+  gap: 4px;
+  margin-top: 4px;
 }
 .orders-panel {
   min-height: 0;
@@ -309,17 +317,18 @@ input, select {
   height: 100%;
   display: grid;
   grid-template-rows: auto auto auto minmax(0, 1fr);
-  gap: 6px;
+  gap: 5px;
   min-height: 0;
+  overflow: hidden;
 }
 .card-slim {
-  padding: 6px 8px;
+  padding: 5px 8px;
   margin: 0;
   border-radius: 8px;
 }
 .card-slim h2 {
-  margin: 0 0 4px;
-  font-size: 0.88rem;
+  margin: 0 0 3px;
+  font-size: 0.82rem;
   color: var(--accent);
 }
 .hint {
@@ -384,52 +393,70 @@ input, select {
   font-size: 0.85rem;
 }
 .specials-slim {
-  margin-top: 6px;
+  margin-top: 4px;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
+  gap: 3px;
+  flex-shrink: 0;
 }
 .specials-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px 8px;
 }
 .special-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 8px;
-  min-height: 28px;
+  gap: 4px;
+  min-height: 26px;
+  min-width: 0;
+  padding: 2px 4px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: #f8fafc;
+}
+.special-row.on {
+  border-color: #99f6e4;
+  background: #f0fdfa;
 }
 .special-row .check {
-  font-size: 0.75rem;
-  gap: 4px;
+  font-size: 0.68rem;
+  gap: 3px;
   margin: 0;
-  min-width: 140px;
+  min-width: 0;
+  flex: 1 1 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .special-input {
-  width: 110px;
-  padding: 3px 6px;
-  font-size: 0.8rem;
+  width: 64px;
+  flex: 0 0 auto;
+  padding: 2px 4px;
+  font-size: 0.72rem;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 4px;
 }
 .special-input-num {
-  width: 72px;
+  width: 48px;
 }
 .special-etct {
   display: inline-flex;
-  gap: 8px;
+  gap: 3px;
   align-items: center;
+  flex: 0 0 auto;
 }
 .special-etct label {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.72rem;
+  gap: 2px;
+  font-size: 0.65rem;
   margin: 0;
   width: auto;
+}
+.special-etct .special-input-num {
+  width: 40px;
 }
 .checks-slim {
   display: flex;
@@ -445,7 +472,7 @@ input, select {
 }
 .rx-table-slim th,
 .rx-table-slim td {
-  padding: 2px;
+  padding: 1px 2px;
 }
 .rx-table-slim td.rx-bad {
   background: #ef4444;
@@ -460,9 +487,13 @@ input, select {
 }
 .rx-table-slim input,
 .rx-table-slim select {
-  min-width: 52px;
-  padding: 4px 5px;
-  font-size: 0.8rem;
+  min-width: 48px;
+  padding: 3px 4px;
+  font-size: 0.78rem;
+}
+.optician-page .table-wrap {
+  margin-bottom: 0;
+  overflow: hidden;
 }
 .actions-inline {
   display: flex;
@@ -496,8 +527,21 @@ input, select {
     max-height: 50vh;
   }
   .optician-shell { height: auto; overflow: auto; }
-  .optician-page { overflow: auto; }
+  .optician-page { overflow: auto; height: auto; }
   .grid-finish { grid-template-columns: 1fr; }
+  .specials-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1101px) {
+  .optician-shell {
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+  }
+  .optician-page,
+  .optician-workspace,
+  .optician-grid {
+    overflow: hidden;
+  }
 }
 @media (max-width: 1000px) {
   .grid-3,

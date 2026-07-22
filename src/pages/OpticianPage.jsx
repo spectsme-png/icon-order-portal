@@ -798,7 +798,7 @@ export default function OpticianPage() {
                             checked={!!row.on}
                             onChange={() => toggleSpecial(d.id)}
                           />
-                          <span>{d.id}</span>
+                          <span title={d.id}>{d.short || d.id}</span>
                         </label>
                         {row.on && d.type === 'text' ? (
                           <input

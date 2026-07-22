@@ -2,30 +2,34 @@
 export const SPECIAL_DEFS = [
   {
     id: 'Custom Engraving',
+    short: 'Engraving',
     type: 'text',
     maxLen: 8,
     lettersOnly: true,
-    hintEn: 'max 8 letters',
-    hintAr: 'حد أقصى 8 أحرف',
+    hintEn: '8 letters',
+    hintAr: '8 أحرف',
   },
   {
     id: 'Decentration',
+    short: 'Decentration',
     type: 'number',
     min: 1,
     max: 5,
     step: 1,
     unit: 'mm',
-    hintEn: '1–5 mm',
-    hintAr: '1–5 مم',
+    hintEn: '1–5',
+    hintAr: '1–5',
   },
   {
     id: 'Edge Blending',
+    short: 'Edge Blend',
     type: 'flag',
     hintEn: '',
     hintAr: '',
   },
   {
     id: 'Special Base',
+    short: 'Base',
     type: 'number',
     min: 0,
     max: 10,
@@ -36,6 +40,7 @@ export const SPECIAL_DEFS = [
   },
   {
     id: 'Special Dia',
+    short: 'Dia',
     type: 'number',
     min: 50,
     max: 80,
@@ -46,13 +51,14 @@ export const SPECIAL_DEFS = [
   },
   {
     id: 'Special Thickness',
+    short: 'Thickness',
     type: 'etct',
     min: 1,
     max: 5,
     step: 0.1,
     unit: 'mm',
-    hintEn: 'ET & CT 1–5 mm',
-    hintAr: 'ET و CT 1–5 مم',
+    hintEn: 'ET/CT',
+    hintAr: 'ET/CT',
   },
 ]
 
