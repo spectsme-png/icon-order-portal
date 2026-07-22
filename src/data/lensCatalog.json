@@ -346,13 +346,13 @@
           "1.61",
           "1.67"
         ],
-        "SunActive Grey": [
+        "Photochromic Grey": [
           "1.50"
         ],
-        "SunActive Brown": [
+        "Photochromic Brown": [
           "1.50"
         ],
-        "Bluecut SunActive Grey": [
+        "Bluecut Photochromic Grey": [
           "1.50"
         ]
       },
@@ -364,10 +364,10 @@
         "Bluecut": [
           "1.50"
         ],
-        "SunActive": [
+        "Photochromic": [
           "1.50"
         ],
-        "Bluecut SunActive": [
+        "Bluecut Photochromic": [
           "1.50"
         ]
       },
