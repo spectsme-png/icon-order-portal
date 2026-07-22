@@ -802,59 +802,57 @@ export default function OpticianPage() {
                             {d.short || d.id}
                           </span>
                         </label>
-                        {row.on && d.type !== 'flag' ? (
-                          <div className="special-fields">
-                            {d.type === 'text' ? (
-                              <input
-                                className="special-input"
-                                value={row.value || ''}
-                                maxLength={d.maxLen}
-                                onChange={(e) => {
-                                  const v = e.target.value.replace(/[^A-Za-z]/g, '').slice(0, d.maxLen)
-                                  setSpecialValue(d.id, { value: v })
-                                }}
-                                placeholder={hint}
-                                aria-label={d.id}
-                              />
-                            ) : null}
-                            {d.type === 'number' ? (
-                              <input
-                                className="special-input special-input-num"
-                                inputMode="decimal"
-                                value={row.value || ''}
-                                onChange={(e) => setSpecialValue(d.id, { value: e.target.value })}
-                                placeholder={hint}
-                                aria-label={d.id}
-                              />
-                            ) : null}
-                            {d.type === 'etct' ? (
-                              <>
-                                <span className="special-mini">
-                                  ET
-                                  <input
-                                    className="special-input special-input-num"
-                                    inputMode="decimal"
-                                    value={row.et || ''}
-                                    onChange={(e) => setSpecialValue(d.id, { et: e.target.value })}
-                                    placeholder="1–5"
-                                    aria-label="ET"
-                                  />
-                                </span>
-                                <span className="special-mini">
-                                  CT
-                                  <input
-                                    className="special-input special-input-num"
-                                    inputMode="decimal"
-                                    value={row.ct || ''}
-                                    onChange={(e) => setSpecialValue(d.id, { ct: e.target.value })}
-                                    placeholder="1–5"
-                                    aria-label="CT"
-                                  />
-                                </span>
-                              </>
-                            ) : null}
-                          </div>
-                        ) : null}
+                        <div className="special-fields" aria-hidden={!row.on}>
+                          {row.on && d.type === 'text' ? (
+                            <input
+                              className="special-input"
+                              value={row.value || ''}
+                              maxLength={d.maxLen}
+                              onChange={(e) => {
+                                const v = e.target.value.replace(/[^A-Za-z]/g, '').slice(0, d.maxLen)
+                                setSpecialValue(d.id, { value: v })
+                              }}
+                              placeholder={hint}
+                              aria-label={d.id}
+                            />
+                          ) : null}
+                          {row.on && d.type === 'number' ? (
+                            <input
+                              className="special-input special-input-num"
+                              inputMode="decimal"
+                              value={row.value || ''}
+                              onChange={(e) => setSpecialValue(d.id, { value: e.target.value })}
+                              placeholder={hint}
+                              aria-label={d.id}
+                            />
+                          ) : null}
+                          {row.on && d.type === 'etct' ? (
+                            <>
+                              <span className="special-mini">
+                                ET
+                                <input
+                                  className="special-input special-input-num"
+                                  inputMode="decimal"
+                                  value={row.et || ''}
+                                  onChange={(e) => setSpecialValue(d.id, { et: e.target.value })}
+                                  placeholder="1–5"
+                                  aria-label="ET"
+                                />
+                              </span>
+                              <span className="special-mini">
+                                CT
+                                <input
+                                  className="special-input special-input-num"
+                                  inputMode="decimal"
+                                  value={row.ct || ''}
+                                  onChange={(e) => setSpecialValue(d.id, { ct: e.target.value })}
+                                  placeholder="1–5"
+                                  aria-label="CT"
+                                />
+                              </span>
+                            </>
+                          ) : null}
+                        </div>
                       </div>
                     )
                   })}
