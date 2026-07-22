@@ -785,68 +785,74 @@ export default function OpticianPage() {
                 </label>
               </div>
               <div className="specials-slim">
-                <span className="muted small">{t.special}</span>
+                <span className="muted small specials-heading">{t.special}</span>
                 <div className="specials-list">
                   {SPECIAL_DEFS.map((d) => {
                     const row = specials[d.id] || { on: false }
                     const hint = lang === 'ar' ? d.hintAr : d.hintEn
                     return (
-                      <div key={d.id} className={`special-row ${row.on ? 'on' : ''}`}>
-                        <label className="check">
+                      <div key={d.id} className={`special-cell ${row.on ? 'on' : ''}`}>
+                        <label className="special-check">
                           <input
                             type="checkbox"
                             checked={!!row.on}
                             onChange={() => toggleSpecial(d.id)}
                           />
-                          <span title={d.id}>{d.short || d.id}</span>
+                          <span className="special-name" title={d.id}>
+                            {d.short || d.id}
+                          </span>
                         </label>
-                        {row.on && d.type === 'text' ? (
-                          <input
-                            className="special-input"
-                            value={row.value || ''}
-                            maxLength={d.maxLen}
-                            onChange={(e) => {
-                              const v = e.target.value.replace(/[^A-Za-z]/g, '').slice(0, d.maxLen)
-                              setSpecialValue(d.id, { value: v })
-                            }}
-                            placeholder={hint}
-                            aria-label={d.id}
-                          />
-                        ) : null}
-                        {row.on && d.type === 'number' ? (
-                          <input
-                            className="special-input special-input-num"
-                            inputMode="decimal"
-                            value={row.value || ''}
-                            onChange={(e) => setSpecialValue(d.id, { value: e.target.value })}
-                            placeholder={hint}
-                            aria-label={d.id}
-                          />
-                        ) : null}
-                        {row.on && d.type === 'etct' ? (
-                          <div className="special-etct">
-                            <label>
-                              ET
+                        {row.on && d.type !== 'flag' ? (
+                          <div className="special-fields">
+                            {d.type === 'text' ? (
+                              <input
+                                className="special-input"
+                                value={row.value || ''}
+                                maxLength={d.maxLen}
+                                onChange={(e) => {
+                                  const v = e.target.value.replace(/[^A-Za-z]/g, '').slice(0, d.maxLen)
+                                  setSpecialValue(d.id, { value: v })
+                                }}
+                                placeholder={hint}
+                                aria-label={d.id}
+                              />
+                            ) : null}
+                            {d.type === 'number' ? (
                               <input
                                 className="special-input special-input-num"
                                 inputMode="decimal"
-                                value={row.et || ''}
-                                onChange={(e) => setSpecialValue(d.id, { et: e.target.value })}
-                                placeholder="1–5"
-                                aria-label="ET"
+                                value={row.value || ''}
+                                onChange={(e) => setSpecialValue(d.id, { value: e.target.value })}
+                                placeholder={hint}
+                                aria-label={d.id}
                               />
-                            </label>
-                            <label>
-                              CT
-                              <input
-                                className="special-input special-input-num"
-                                inputMode="decimal"
-                                value={row.ct || ''}
-                                onChange={(e) => setSpecialValue(d.id, { ct: e.target.value })}
-                                placeholder="1–5"
-                                aria-label="CT"
-                              />
-                            </label>
+                            ) : null}
+                            {d.type === 'etct' ? (
+                              <>
+                                <span className="special-mini">
+                                  ET
+                                  <input
+                                    className="special-input special-input-num"
+                                    inputMode="decimal"
+                                    value={row.et || ''}
+                                    onChange={(e) => setSpecialValue(d.id, { et: e.target.value })}
+                                    placeholder="1–5"
+                                    aria-label="ET"
+                                  />
+                                </span>
+                                <span className="special-mini">
+                                  CT
+                                  <input
+                                    className="special-input special-input-num"
+                                    inputMode="decimal"
+                                    value={row.ct || ''}
+                                    onChange={(e) => setSpecialValue(d.id, { ct: e.target.value })}
+                                    placeholder="1–5"
+                                    aria-label="CT"
+                                  />
+                                </span>
+                              </>
+                            ) : null}
                           </div>
                         ) : null}
                       </div>

@@ -393,70 +393,91 @@ input, select {
   font-size: 0.85rem;
 }
 .specials-slim {
-  margin-top: 4px;
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
   flex-shrink: 0;
+}
+.specials-heading {
+  font-weight: 600;
 }
 .specials-list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 4px 8px;
+  gap: 5px;
 }
-.special-row {
+.special-cell {
   display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   gap: 4px;
-  min-height: 26px;
+  min-height: 30px;
   min-width: 0;
-  padding: 2px 4px;
-  border: 1px solid transparent;
+  padding: 5px 7px;
+  border: 1px solid var(--border);
   border-radius: 6px;
   background: #f8fafc;
 }
-.special-row.on {
-  border-color: #99f6e4;
+.special-cell.on {
+  border-color: #5eead4;
   background: #f0fdfa;
 }
-.special-row .check {
-  font-size: 0.68rem;
-  gap: 3px;
+.optician-page label.special-check {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
   margin: 0;
-  min-width: 0;
+  width: 100%;
+  font-size: 0.74rem;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+.special-check input[type='checkbox'] {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--accent);
+}
+.special-name {
   flex: 1 1 auto;
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 500;
+}
+.special-fields {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+  padding-inline-start: 20px;
 }
 .special-input {
-  width: 64px;
-  flex: 0 0 auto;
-  padding: 2px 4px;
-  font-size: 0.72rem;
+  width: 100%;
+  max-width: 110px;
+  padding: 3px 6px;
+  font-size: 0.74rem;
   border: 1px solid var(--border);
   border-radius: 4px;
+  background: #fff;
 }
 .special-input-num {
-  width: 48px;
+  width: 52px;
+  max-width: 52px;
 }
-.special-etct {
+.special-mini {
   display: inline-flex;
+  flex-direction: row;
+  align-items: center;
   gap: 3px;
-  align-items: center;
-  flex: 0 0 auto;
-}
-.special-etct label {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 0.65rem;
-  margin: 0;
-  width: auto;
-}
-.special-etct .special-input-num {
-  width: 40px;
+  font-size: 0.68rem;
+  color: var(--muted);
+  white-space: nowrap;
 }
 .checks-slim {
   display: flex;
