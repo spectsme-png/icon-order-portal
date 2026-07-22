@@ -335,61 +335,45 @@
       }
     },
     "Bifocal": {
-      "Invisible Line D28": {
+      "Icon Invisible Line Bifocal": {
         "Clear": [
           "1.50",
-          "1.56",
           "1.61",
           "1.67"
         ],
-        "Clear Bluecut": [
+        "Bluecut": [
           "1.50",
           "1.61",
           "1.67"
         ],
-        "Photochromic": [
+        "SunActive Grey": [
           "1.50"
         ],
-        "Photochromic Bluecut": [
+        "SunActive Brown": [
+          "1.50"
+        ],
+        "Bluecut SunActive Grey": [
           "1.50"
         ]
       },
-      "Moon Bifocal": {
+      "Icon Bifocal D-28": {
         "Clear": [
           "1.50",
-          "1.56",
-          "1.61",
-          "1.67"
+          "1.61"
         ],
-        "Clear Bluecut": [
-          "1.50",
-          "1.61",
-          "1.67"
-        ],
-        "Photochromic": [
+        "Bluecut": [
           "1.50"
         ],
-        "Photochromic Bluecut": [
+        "SunActive": [
+          "1.50"
+        ],
+        "Bluecut SunActive": [
           "1.50"
         ]
       },
-      "Executive Bifocal": {
+      "Icon Bifocal Executive": {
         "Clear": [
-          "1.50",
-          "1.56",
-          "1.61",
-          "1.67"
-        ],
-        "Clear Bluecut": [
-          "1.50",
-          "1.61",
-          "1.67"
-        ],
-        "Photochromic": [
-          "1.50"
-        ],
-        "Photochromic Bluecut": [
-          "1.50"
+          "1.56"
         ]
       }
     }
