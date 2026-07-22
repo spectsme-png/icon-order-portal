@@ -385,9 +385,11 @@
   "coating": [
     "None",
     "Emerald Green Coating",
-    "Mirror (Gold,Silver,Blue)",
     "Sapphire Blue Coating",
-    "Solitare Low Reflection"
+    "Solitare Low Reflection",
+    "Mirror Gold",
+    "Mirror Silver",
+    "Mirror Blue"
   ],
   "edging": [
     "None",
