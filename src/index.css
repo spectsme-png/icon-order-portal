@@ -569,6 +569,11 @@ input, select {
   width: auto;
   min-width: 120px;
 }
+.invoice-field input {
+  padding: 5px 7px;
+  font-size: 0.85rem;
+  width: 140px;
+}
 .invoice-field input:disabled,
 .invoice-field input:read-only {
   background: #ecfdf5;
