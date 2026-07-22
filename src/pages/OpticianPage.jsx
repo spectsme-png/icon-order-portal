@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import catalog from '../data/lensCatalog.json'
 import { getSavedLang, saveLang, t as tt } from '../lib/opticianI18n'
+import { emptySpecialState, formatSpecials, SPECIAL_DEFS, validateSpecials } from '../lib/specials'
 import { displayOrderStatus, remarksWithoutCancelMark } from '../lib/orderStatus'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
@@ -149,7 +150,7 @@ export default function OpticianPage() {
   const [tinting, setTinting] = useState('None')
   const [tintColor, setTintColor] = useState('')
   const [tintPct, setTintPct] = useState('')
-  const [specials, setSpecials] = useState({})
+  const [specials, setSpecials] = useState(emptySpecialState)
   const [remarks, setRemarks] = useState('')
 
   function switchLang(next) {
@@ -269,15 +270,18 @@ export default function OpticianPage() {
     }
   }
 
-  function toggleSpecial(name) {
-    setSpecials((prev) => ({ ...prev, [name]: !prev[name] }))
+  function toggleSpecial(id) {
+    setSpecials((prev) => {
+      const cur = prev[id] || { on: false }
+      return { ...prev, [id]: { ...cur, on: !cur.on } }
+    })
   }
 
-  function selectedSpecials() {
-    const list = Object.entries(specials)
-      .filter(([, v]) => v)
-      .map(([k]) => k)
-    return list.length ? list.join(', ') : 'None'
+  function setSpecialValue(id, patch) {
+    setSpecials((prev) => ({
+      ...prev,
+      [id]: { ...(prev[id] || { on: true }), on: true, ...patch },
+    }))
   }
 
   function startNewOrder() {
@@ -293,7 +297,7 @@ export default function OpticianPage() {
     setTinting('None')
     setTintColor('')
     setTintPct('')
-    setSpecials({})
+    setSpecials(emptySpecialState())
     setRemarks('')
     setOd(emptyEye())
     setOs(emptyEye())
@@ -377,6 +381,11 @@ export default function OpticianPage() {
       setErr(t.errCorridor)
       return
     }
+    const specialErrs = validateSpecials(specials, lang)
+    if (specialErrs.length) {
+      setErr(specialErrs[0])
+      return
+    }
     setBusy(true)
     try {
       const ref = orderRef.trim()
@@ -406,7 +415,7 @@ export default function OpticianPage() {
         tinting,
         tint_color: tinting === 'None' ? '' : tintColor,
         tint_pct: tinting === 'None' ? '' : tintPct,
-        specials: selectedSpecials(),
+        specials: formatSpecials(specials),
         remarks: remarks.trim(),
         od: {
           ...od,
@@ -777,13 +786,72 @@ export default function OpticianPage() {
               </div>
               <div className="specials-slim">
                 <span className="muted small">{t.special}</span>
-                <div className="checks-slim">
-                  {catalog.special.map((s) => (
-                    <label key={s} className="check">
-                      <input type="checkbox" checked={!!specials[s]} onChange={() => toggleSpecial(s)} />
-                      <span>{s}</span>
-                    </label>
-                  ))}
+                <div className="specials-list">
+                  {SPECIAL_DEFS.map((d) => {
+                    const row = specials[d.id] || { on: false }
+                    const hint = lang === 'ar' ? d.hintAr : d.hintEn
+                    return (
+                      <div key={d.id} className={`special-row ${row.on ? 'on' : ''}`}>
+                        <label className="check">
+                          <input
+                            type="checkbox"
+                            checked={!!row.on}
+                            onChange={() => toggleSpecial(d.id)}
+                          />
+                          <span>{d.id}</span>
+                        </label>
+                        {row.on && d.type === 'text' ? (
+                          <input
+                            className="special-input"
+                            value={row.value || ''}
+                            maxLength={d.maxLen}
+                            onChange={(e) => {
+                              const v = e.target.value.replace(/[^A-Za-z]/g, '').slice(0, d.maxLen)
+                              setSpecialValue(d.id, { value: v })
+                            }}
+                            placeholder={hint}
+                            aria-label={d.id}
+                          />
+                        ) : null}
+                        {row.on && d.type === 'number' ? (
+                          <input
+                            className="special-input special-input-num"
+                            inputMode="decimal"
+                            value={row.value || ''}
+                            onChange={(e) => setSpecialValue(d.id, { value: e.target.value })}
+                            placeholder={hint}
+                            aria-label={d.id}
+                          />
+                        ) : null}
+                        {row.on && d.type === 'etct' ? (
+                          <div className="special-etct">
+                            <label>
+                              ET
+                              <input
+                                className="special-input special-input-num"
+                                inputMode="decimal"
+                                value={row.et || ''}
+                                onChange={(e) => setSpecialValue(d.id, { et: e.target.value })}
+                                placeholder="1–5"
+                                aria-label="ET"
+                              />
+                            </label>
+                            <label>
+                              CT
+                              <input
+                                className="special-input special-input-num"
+                                inputMode="decimal"
+                                value={row.ct || ''}
+                                onChange={(e) => setSpecialValue(d.id, { ct: e.target.value })}
+                                placeholder="1–5"
+                                aria-label="CT"
+                              />
+                            </label>
+                          </div>
+                        ) : null}
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             </section>

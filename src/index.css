@@ -384,11 +384,52 @@ input, select {
   font-size: 0.85rem;
 }
 .specials-slim {
-  margin-top: 4px;
+  margin-top: 6px;
   display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+}
+.specials-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.special-row {
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
+  min-height: 28px;
+}
+.special-row .check {
+  font-size: 0.75rem;
+  gap: 4px;
+  margin: 0;
+  min-width: 140px;
+}
+.special-input {
+  width: 110px;
+  padding: 3px 6px;
+  font-size: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.special-input-num {
+  width: 72px;
+}
+.special-etct {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+.special-etct label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  margin: 0;
+  width: auto;
 }
 .checks-slim {
   display: flex;

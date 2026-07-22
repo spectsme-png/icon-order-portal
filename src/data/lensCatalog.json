@@ -406,11 +406,8 @@
   ],
   "special": [
     "Custom Engraving",
-    "Decentration (1mm to 5mm)",
+    "Decentration",
     "Edge Blending",
-    "High Cyl (-4.25 to -6.00)",
-    "High Cyl (-6.25 to -8.00)",
-    "Prism Diopter (1 to 5)",
     "Special Base",
     "Special Dia",
     "Special Thickness"
