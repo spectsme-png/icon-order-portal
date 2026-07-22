@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { LabelPreview } from '../components/PrintPreviews'
-import { markOrderReceived } from '../lib/orderStatus'
+import { getInvoiceNo } from '../lib/orderStatus'
 import { LABEL_PAGE, usePrintPageSize } from '../lib/usePrintPageSize'
 import { supabase } from '../lib/supabase'
 
 export default function PrintStickersPage() {
   const { id } = useParams()
   const [searchParams] = useSearchParams()
-  const invoiceNo = searchParams.get('invoice') || ''
   const [order, setOrder] = useState(null)
   const [error, setError] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [msg, setMsg] = useState('')
+
+  const queryInvoice = searchParams.get('invoice') || ''
+  const invoiceNo = (queryInvoice || getInvoiceNo(order) || '').trim()
 
   usePrintPageSize(LABEL_PAGE)
 
@@ -28,24 +28,13 @@ export default function PrintStickersPage() {
       })
   }, [id])
 
-  async function doPrint() {
-    if (!invoiceNo.trim()) {
-      setError('Enter invoice no. on the office page before printing labels.')
+  function doPrint() {
+    if (!invoiceNo) {
+      setError('Print the card first (with invoice no.) — invoice is required on labels too.')
       return
     }
-    setBusy(true)
     setError('')
-    setMsg('')
-    try {
-      await markOrderReceived(supabase, id)
-      setMsg('Status → RECEIVED (optician sees DONE)')
-      setOrder((prev) => (prev ? { ...prev, status: 'RECEIVED' } : prev))
-      window.print()
-    } catch (ex) {
-      setError(ex.message || 'Could not update status')
-    } finally {
-      setBusy(false)
-    }
+    window.print()
   }
 
   if (error && !order) {
@@ -74,13 +63,12 @@ export default function PrintStickersPage() {
                 · Invoice <strong>{invoiceNo}</strong>
               </>
             ) : (
-              <> · <strong>invoice required</strong></>
+              <> · <strong>print card first to lock invoice</strong></>
             )}
           </p>
-          {msg ? <p className="ok-inline">{msg}</p> : null}
           {error ? <p className="alert-inline">{error}</p> : null}
-          <button className="btn primary" type="button" onClick={doPrint} disabled={busy}>
-            {busy ? 'Updating…' : 'Print labels'}
+          <button className="btn primary" type="button" onClick={doPrint} disabled={!invoiceNo}>
+            Print labels
           </button>
         </div>
       </div>

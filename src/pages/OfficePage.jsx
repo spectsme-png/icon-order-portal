@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { LabelPreview, WarrantyCardPreview, lensLine, tintLabel } from '../components/PrintPreviews'
 import {
   displayOrderStatus,
+  getInvoiceNo,
+  isInvoiceLocked,
   isOrderCancelled,
   remarksWithCancelMark,
   remarksWithoutCancelMark,
@@ -179,16 +181,23 @@ export default function OfficePage() {
 
   const od = selected?.od || {}
   const os = selected?.os || {}
-  const invoiceNo = selected ? invoiceByOrder[selected.id] || '' : ''
+  const savedInvoice = selected ? getInvoiceNo(selected) : ''
+  const invoiceLocked = selected ? isInvoiceLocked(selected) : false
+  const invoiceNo = invoiceLocked
+    ? savedInvoice
+    : selected
+      ? invoiceByOrder[selected.id] ?? savedInvoice
+      : ''
 
   function setInvoiceNo(value) {
-    if (!selected) return
+    if (!selected || invoiceLocked) return
     setInvoiceByOrder((prev) => ({ ...prev, [selected.id]: value }))
   }
 
   function printPath(kind) {
     if (!selected) return '#'
-    const q = invoiceNo.trim() ? `?invoice=${encodeURIComponent(invoiceNo.trim())}` : ''
+    const inv = invoiceNo.trim()
+    const q = inv ? `?invoice=${encodeURIComponent(inv)}` : ''
     return `/office/print/${kind}/${selected.id}${q}`
   }
 
@@ -284,9 +293,14 @@ export default function OfficePage() {
                           value={invoiceNo}
                           onChange={(e) => setInvoiceNo(e.target.value)}
                           placeholder="Enter invoice #"
-                          required
+                          readOnly={invoiceLocked}
+                          disabled={invoiceLocked}
+                          title={invoiceLocked ? 'Locked after printing card' : ''}
                         />
                       </label>
+                      {invoiceLocked ? (
+                        <span className="ok-inline">Invoice locked</span>
+                      ) : null}
                       <Link
                         className={`btn primary btn-slim ${!invoiceNo.trim() ? 'btn-disabled' : ''}`}
                         to={invoiceNo.trim() ? printPath('warranty') : '#'}
@@ -305,7 +319,11 @@ export default function OfficePage() {
                         onClick={(e) => {
                           if (!invoiceNo.trim()) {
                             e.preventDefault()
-                            setError('Enter invoice no. before printing')
+                            setError(
+                              invoiceLocked
+                                ? 'Invoice missing on this order'
+                                : 'Enter invoice no. and print card first',
+                            )
                           }
                         }}
                       >

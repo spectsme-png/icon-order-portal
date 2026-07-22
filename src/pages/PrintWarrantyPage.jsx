@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { WarrantyCardPreview } from '../components/PrintPreviews'
-import { markOrderReceived } from '../lib/orderStatus'
+import { getInvoiceNo, markOrderReceived } from '../lib/orderStatus'
 import { CARD_PAGE, usePrintPageSize } from '../lib/usePrintPageSize'
 import { supabase } from '../lib/supabase'
 
 export default function PrintWarrantyPage() {
   const { id } = useParams()
   const [searchParams] = useSearchParams()
-  const invoiceNo = searchParams.get('invoice') || ''
   const [order, setOrder] = useState(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState('')
+
+  const queryInvoice = searchParams.get('invoice') || ''
+  const invoiceNo = (queryInvoice || getInvoiceNo(order) || '').trim()
 
   usePrintPageSize(CARD_PAGE)
 
@@ -29,7 +31,7 @@ export default function PrintWarrantyPage() {
   }, [id])
 
   async function doPrint() {
-    if (!invoiceNo.trim()) {
+    if (!invoiceNo) {
       setError('Enter invoice no. on the office page before printing the card.')
       return
     }
@@ -37,9 +39,18 @@ export default function PrintWarrantyPage() {
     setError('')
     setMsg('')
     try {
-      await markOrderReceived(supabase, id)
-      setMsg('Status → RECEIVED (optician sees DONE)')
-      setOrder((prev) => (prev ? { ...prev, status: 'RECEIVED' } : prev))
+      const saved = await markOrderReceived(supabase, id, invoiceNo, order?.remarks || '')
+      setMsg('Invoice locked · Status → RECEIVED (optician sees DONE)')
+      setOrder((prev) =>
+        prev
+          ? {
+              ...prev,
+              status: 'RECEIVED',
+              invoice_no: saved.invoice_no,
+              remarks: saved.remarks ?? prev.remarks,
+            }
+          : prev,
+      )
       window.print()
     } catch (ex) {
       setError(ex.message || 'Could not update status')
@@ -68,7 +79,7 @@ export default function PrintWarrantyPage() {
             {invoiceNo ? (
               <>
                 {' '}
-                · Invoice <strong>{invoiceNo}</strong>
+                · Invoice <strong>{invoiceNo}</strong> (locked after print)
               </>
             ) : (
               <> · <strong>invoice required</strong></>

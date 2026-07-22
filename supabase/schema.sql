@@ -30,6 +30,7 @@ create table if not exists public.orders (
   tinting text default 'None',
   tint_color text,
   tint_pct text,
+  invoice_no text,
   specials text default 'None',
   remarks text,
   od jsonb not null default '{}'::jsonb,
